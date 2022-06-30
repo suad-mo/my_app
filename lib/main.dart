@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/question.dart';
+import './answer.dart';
+import './question.dart';
 
 // void main() {
 //   runApp(const MyApp());
@@ -15,21 +16,37 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   // const MyApp({Key? key}) : super(key: key);
   var _questionIndex = 0;
+  final questions = [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': ['Black', 'Red', 'Green', 'White'],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
+    },
+    {
+      'questionText': 'Who\'s your favorite instructor?',
+      'answers': ['Max', 'Max', 'Max', 'Max'],
+    },
+  ];
 
-  void answerQuestion() {
+  void _answerQuestion() {
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
     print('Answer chosen!');
+
+    if (_questionIndex < questions.length) {
+      print('We have more questions!');
+    } else {
+      print('No more questions!');
+    }
   }
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    var questions = [
-      'What\'s your favorite color?',
-      'What\'s your favorite animal?'
-    ];
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -38,23 +55,12 @@ class _MyAppState extends State<MyApp> {
         body: Column(
           children: [
             Question(
-              questions[_questionIndex],
+              questions[_questionIndex]['questionText'].toString(),
             ),
-            RaisedButton(
-              child: Text('Answer 1'),
-              onPressed: answerQuestion,
-            ),
-            RaisedButton(
-              child: Text('Answer 2'),
-              onPressed: () => print('Answer 2 chosen!'),
-            ),
-            RaisedButton(
-              child: Text('Answer 3'),
-              onPressed: () {
-                //...
-                print('Answer 3 chosen!');
-              },
-            )
+            ...(questions[_questionIndex]['answers'] as List<String>)
+                .map((answer) {
+              return Answer(_answerQuestion, answer);
+            }).toList()
           ],
         ),
       ),
